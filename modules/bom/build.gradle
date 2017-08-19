@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'io.spring.dependency-management' version '1.0.3.RELEASE'
+}
+
+publishing {
+    publications {
+        "$project.name"(MavenPublication) {
+            pom.withXml {
+                def node = asNode().get('dependencyManagement').first().get('dependencies').first()
+                rootProject.libs.each {
+                    def depNode = new Node(node, 'dependency')
+                    depNode.appendNode('groupId', group)
+                    depNode.appendNode('artifactId', it)
+                    depNode.appendNode('version', version)
+                }
+            }
+        }
+    }
+}

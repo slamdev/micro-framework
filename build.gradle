@@ -3,6 +3,10 @@ plugins {
     id 'idea'
 }
 
+ext {
+    libs = subprojects.collect { it.name }.findAll { !(it in ['bom', 'modules']) }
+}
+
 allprojects {
     group 'com.github.slamdev.microframework'
 }
@@ -23,6 +27,15 @@ subprojects {
                     dependency 'ch.qos.logback:logback-access:1.2.3'
                     dependency 'org.projectlombok:lombok:1.16.18'
                     dependency 'org.jdbi:jdbi:2.78'
+                }
+            }
+        }
+        if (module.plugins.hasPlugin('maven-publish') && module.name != 'bom') {
+            publishing {
+                publications {
+                    "$project.name"(MavenPublication) {
+                        from components.java
+                    }
                 }
             }
         }
