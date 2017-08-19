@@ -1,0 +1,8 @@
+rootProject.name = 'micro-framework'
+['modules']
+        .collect { file(it) }
+        .findAll { it.exists() }
+        .collect { it.listFiles() }
+        .flatten()
+        .findAll { it.name != '.DS_Store' }
+        .each { include "${it.parentFile.name}:${it.name}" }

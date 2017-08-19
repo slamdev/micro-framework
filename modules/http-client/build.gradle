@@ -1,0 +1,13 @@
+plugins {
+    id 'java-library'
+    id 'io.spring.dependency-management' version '1.0.3.RELEASE'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    api 'com.squareup.moshi:moshi'
+    api 'com.squareup.okhttp3:okhttp'
+}
