@@ -10,4 +10,6 @@ repositories {
 
 dependencies {
     api 'org.jdbi:jdbi'
+    api 'org.flywaydb:flyway-core'
+    api 'com.zaxxer:HikariCP'
 }

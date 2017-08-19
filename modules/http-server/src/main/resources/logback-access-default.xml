@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <layout class="ch.qos.logback.contrib.json.access.JsonLayout"/>
+            <!-- Parameters description: ch.qos.logback.access.PatternLayout -->
+            <pattern>
+                %t{yyyy-MM-dd HH:mm:ss.SSS}  %green(ACCS) [%15.15I] %boldCyan(%m) %cyan(%U%q) : %s "%D ms" %u %h "%i{Referer}" "%i{User-Agent}"
+            </pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+    <appender-ref ref="CONSOLE"/>
+</configuration>
