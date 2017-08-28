@@ -1,6 +1,6 @@
-package com.github.slamdev.microframework.http.server.responders;
+package com.github.slamdev.microframework.http.server;
 
-import com.squareup.moshi.Moshi;
+import com.google.gson.Gson;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.StatusCodes;
 import lombok.experimental.UtilityClass;
@@ -17,6 +17,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @UtilityClass
 public class Responders {
 
+    private static final Gson GSON = new Gson();
+
     public void sendError(HttpServerExchange exchange, int statusCode, Throwable throwable) {
         exchange.setStatusCode(statusCode);
         Map<String, Object> data = new HashMap<>();
@@ -29,8 +31,7 @@ public class Responders {
     }
 
     public void sendJson(HttpServerExchange exchange, Object object) {
-        Moshi moshi = new Moshi.Builder().build();
-        String string = moshi.adapter(Object.class).toJson(object);
+        String string = GSON.toJson(object);
         sendJson(exchange, string);
     }
 

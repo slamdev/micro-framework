@@ -8,11 +8,12 @@ import lombok.Value;
 public class HttpException extends RuntimeException {
 
     int status;
-    String message;
 
-    public HttpException(int status, String message) {
-        super(message);
+    String statusMessage;
+
+    public HttpException(int status, String statusMessage) {
+        super(String.join(" ", Integer.toString(status), statusMessage));
         this.status = status;
-        this.message = message;
+        this.statusMessage = statusMessage;
     }
 }

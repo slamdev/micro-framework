@@ -1,7 +1,6 @@
 package com.github.slamdev.microframework.http.server;
 
 import com.github.slamdev.microframework.http.server.handlers.ShutdownHandler;
-import com.github.slamdev.microframework.http.server.responders.Responders;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import io.undertow.Undertow;
@@ -14,12 +13,15 @@ import static com.github.slamdev.microframework.http.server.HandlerFactory.*;
 import static io.undertow.Handlers.exceptionHandler;
 import static io.undertow.server.handlers.ExceptionHandler.THROWABLE;
 import static io.undertow.util.StatusCodes.INTERNAL_SERVER_ERROR;
+import static java.util.Optional.ofNullable;
 
 public class Server {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     private final Config appConfig;
+
+    private Undertow undertow;
 
     private static void handleInternalException(HttpServerExchange exchange) {
         Throwable throwable = exchange.getAttachment(THROWABLE);
@@ -40,7 +42,7 @@ public class Server {
         this.appConfig = appConfig;
     }
 
-    public void run(HttpHandler baseHandler) {
+    public void start(HttpHandler baseHandler) {
         Config config = appConfig.withFallback(ConfigFactory.load("reference.properties"));
         LOGGER.info("{}", config);
         HttpHandler handler = configHandler(
@@ -53,10 +55,14 @@ public class Server {
                                 .addExceptionHandler(HttpException.class, Server::handleHttpException)
                                 .addExceptionHandler(Throwable.class, Server::handleInternalException)
                 ), config);
-        Undertow server = Undertow.builder()
+        undertow = Undertow.builder()
                 .addHttpListener(config.getInt("server.port"), "localhost")
                 .setHandler(handler).build();
-        ShutdownHandler.setServerInstance(server);
-        server.start();
+        ShutdownHandler.setServerInstance(undertow);
+        undertow.start();
+    }
+
+    public void stop() {
+        ofNullable(undertow).ifPresent(Undertow::stop);
     }
 }

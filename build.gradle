@@ -17,7 +17,7 @@ subprojects {
             dependencyManagement {
                 dependencies {
                     dependency 'com.google.guava:guava:23.0'
-                    dependency 'com.squareup.moshi:moshi:1.5.0'
+                    dependency 'com.google.code.gson:gson:2.8.1'
                     dependency 'com.squareup.okhttp3:okhttp:3.8.1'
                     dependency 'org.easybatch:easybatch-core:5.1.0'
                     dependency 'io.undertow:undertow-core:1.4.18.Final'
@@ -30,6 +30,12 @@ subprojects {
                     dependency 'org.flywaydb:flyway-core:4.2.0'
                     dependency 'com.google.guava:guava:23.0'
                     dependency 'com.zaxxer:HikariCP:2.6.3'
+                    dependency 'com.h2database:h2:1.4.196'
+                    dependency 'org.assertj:assertj-core:3.8.0'
+                    dependency 'junit:junit:4.12'
+                    dependency 'org.mockito:mockito-core:2.9.0'
+                    dependency 'org.postgresql:postgresql:42.1.4'
+                    dependency 'org.slf4j:jul-to-slf4j:1.7.25'
                 }
             }
         }
