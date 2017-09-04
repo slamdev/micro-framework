@@ -20,6 +20,9 @@ subprojects {
                     dependency 'com.google.code.gson:gson:2.8.1'
                     dependency 'com.squareup.okhttp3:okhttp:3.8.1'
                     dependency 'org.easybatch:easybatch-core:5.1.0'
+                    dependency 'org.easybatch:easybatch-jdbc:5.1.0'
+                    dependency 'org.easybatch:easybatch-flatfile:5.1.0'
+                    dependency 'org.easybatch:easybatch-json:5.1.0'
                     dependency 'io.undertow:undertow-core:1.4.18.Final'
                     dependency 'com.typesafe:config:1.3.1'
                     dependency 'org.slf4j:slf4j-api:1.7.25'
@@ -36,6 +39,7 @@ subprojects {
                     dependency 'org.mockito:mockito-core:2.9.0'
                     dependency 'org.postgresql:postgresql:42.1.4'
                     dependency 'org.slf4j:jul-to-slf4j:1.7.25'
+                    dependency 'com.jayway.jsonpath:json-path:2.4.0'
                 }
             }
         }
