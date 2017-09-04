@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.net.MediaType.JSON_UTF_8;
 import static io.undertow.util.Headers.CONTENT_TYPE;
@@ -31,7 +32,7 @@ public class Responders {
     }
 
     public void sendJson(HttpServerExchange exchange, Object object) {
-        String string = GSON.toJson(object);
+        String string = Optional.ofNullable(object).map(GSON::toJson).orElse("");
         sendJson(exchange, string);
     }
 
