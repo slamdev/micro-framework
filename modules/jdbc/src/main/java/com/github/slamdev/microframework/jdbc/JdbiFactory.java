@@ -1,6 +1,5 @@
 package com.github.slamdev.microframework.jdbc;
 
-import com.typesafe.config.Config;
 import lombok.experimental.UtilityClass;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.IDBI;
