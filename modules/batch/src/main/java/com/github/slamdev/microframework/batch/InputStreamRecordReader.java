@@ -1,5 +1,6 @@
 package com.github.slamdev.microframework.batch;
 
+import lombok.SneakyThrows;
 import org.easybatch.core.reader.RecordReader;
 import org.easybatch.core.record.Header;
 import org.easybatch.core.record.StringRecord;
@@ -8,11 +9,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 
 public class InputStreamRecordReader implements RecordReader {
+
+    private static final List<String> GZIP_EXTENSIONS = asList(".gz", ".gzip");
 
     private Scanner scanner;
 
@@ -32,8 +38,10 @@ public class InputStreamRecordReader implements RecordReader {
         this(inputStream, UTF_8, null);
     }
 
+    @SneakyThrows
     public InputStreamRecordReader(InputStream inputStream, Charset charset, String source) {
-        this.inputStream = inputStream;
+        this.inputStream = GZIP_EXTENSIONS.stream().anyMatch(source::endsWith) ?
+                new GZIPInputStream(inputStream) : inputStream;
         this.charset = charset;
         this.source = source;
     }
