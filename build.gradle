@@ -40,6 +40,7 @@ subprojects {
                     dependency 'org.postgresql:postgresql:42.1.4'
                     dependency 'org.slf4j:jul-to-slf4j:1.7.25'
                     dependency 'com.jayway.jsonpath:json-path:2.4.0'
+                    dependency 'com.google.cloud:google-cloud-storage:1.4.0'
                 }
             }
         }

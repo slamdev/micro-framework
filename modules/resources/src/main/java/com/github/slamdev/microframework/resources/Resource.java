@@ -11,4 +11,6 @@ public interface Resource {
     boolean delete();
 
     String getPath();
+
+    boolean exists();
 }

@@ -10,5 +10,6 @@ repositories {
 
 dependencies {
     api 'org.slf4j:slf4j-api'
+    compileOnly 'com.google.cloud:google-cloud-storage'
     compileOnly 'org.projectlombok:lombok'
 }

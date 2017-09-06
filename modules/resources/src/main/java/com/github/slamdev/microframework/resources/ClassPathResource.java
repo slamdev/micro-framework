@@ -25,6 +25,12 @@ public class ClassPathResource implements Resource {
     }
 
     @Override
+    public boolean exists() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return classLoader.getResource(path) != null;
+    }
+
+    @Override
     public String getName() {
         return getFilename(path);
     }

@@ -124,6 +124,10 @@ class AntPathMatcher {
         return pathChar == patternChar;
     }
 
+    public static boolean isPattern(String pattern) {
+        return pattern.indexOf('*') != -1 || pattern.indexOf('?') != -1;
+    }
+
     public static final class Builder {
 
         private char pathSeparator = '/';
