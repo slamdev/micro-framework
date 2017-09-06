@@ -10,4 +10,5 @@ repositories {
 
 dependencies {
     api 'com.squareup.okhttp3:okhttp'
+    compileOnly 'org.projectlombok:lombok'
 }
