@@ -44,12 +44,54 @@ subprojects {
                 }
             }
         }
-        if (module.plugins.hasPlugin('maven-publish') && module.name != 'bom') {
-            publishing {
-                publications {
-                    "$project.name"(MavenPublication) {
-                        from components.java
+        if (module.plugins.hasPlugin('maven-publish')) {
+            if (module.name != 'bom') {
+                javadoc {
+                    source = sourceSets.main.allJava
+                }
+
+                task sourceJar(type: Jar) {
+                    from sourceSets.main.allJava
+                    classifier 'sources'
+                }
+
+                task javadocJar(type: Jar) {
+                    from javadoc
+                    classifier 'javadoc'
+                }
+
+                artifacts {
+                    archives jar
+                    archives sourceJar
+                    archives javadocJar
+                }
+
+                publishing {
+                    publications {
+                        "$module.name"(MavenPublication) {
+                            from components.java
+                            artifact sourceJar
+                            artifact javadocJar
+                        }
                     }
+                }
+            }
+        }
+        if (module.plugins.hasPlugin('com.jfrog.bintray')) {
+            bintray {
+                user = 'slamdev'
+                key = project.properties['bintray.publish.key']
+                override = true
+                publications = [module.name]
+                pkg {
+                    repo = 'maven'
+                    name = module.name
+                    desc = 'Micro Framework'
+                    licenses = ['MIT']
+                    websiteUrl = 'https://github.com/slamdev/micro-framework'
+                    issueTrackerUrl = 'https://github.com/slamdev/micro-framework/issues'
+                    vcsUrl = 'https://github.com/slamdev/micro-framework.git'
+                    labels = ['java', 'microsevices', 'framework']
                 }
             }
         }
