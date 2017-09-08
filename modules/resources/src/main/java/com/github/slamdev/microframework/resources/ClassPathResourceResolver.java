@@ -1,10 +1,8 @@
 package com.github.slamdev.microframework.resources;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import com.google.common.reflect.ClassPath;
+import lombok.SneakyThrows;
+
 import java.util.List;
 
 import static com.github.slamdev.microframework.resources.AntPathMatcher.Builder;
@@ -43,23 +41,19 @@ public class ClassPathResourceResolver implements ResourceResolver<ClassPathReso
         return resources.stream().filter(r -> MATCHER.isMatch(subPattern, r.getPath())).collect(toList());
     }
 
+    @SneakyThrows
     private List<ClassPathResource> getPlainResources(String location) {
         location = stripProtocol(location);
         if (location.endsWith("/")) {
             location = location.substring(0, location.length() - 1);
         }
-        List<String> filenames = new ArrayList<>();
+        String path = location;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        try (InputStream in = classLoader.getResourceAsStream(location);
-             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            String resource;
-            while ((resource = br.readLine()) != null) {
-                filenames.add(String.join("/", location, resource));
-            }
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-        return filenames.stream().map(ClassPathResource::new).collect(toList());
+        return ClassPath.from(classLoader).getResources()
+                .stream()
+                .map(ClassPath.ResourceInfo::getResourceName)
+                .filter(name -> name.startsWith(path))
+                .map(ClassPathResource::new).collect(toList());
     }
 
     private String stripProtocol(String location) {
