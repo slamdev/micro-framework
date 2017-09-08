@@ -56,7 +56,7 @@ public class Server {
                                 .addExceptionHandler(Throwable.class, Server::handleInternalException)
                 ), config);
         undertow = Undertow.builder()
-                .addHttpListener(config.getInt("server.port"), "localhost")
+                .addHttpListener(config.getInt("server.port"), "0.0.0.0")
                 .setHandler(handler).build();
         ShutdownHandler.setServerInstance(undertow);
         undertow.start();
