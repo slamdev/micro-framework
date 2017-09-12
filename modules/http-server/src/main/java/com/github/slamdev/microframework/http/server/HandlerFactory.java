@@ -12,13 +12,18 @@ import io.undertow.security.handlers.AuthenticationMechanismsHandler;
 import io.undertow.security.handlers.SecurityInitialHandler;
 import io.undertow.security.idm.IdentityManager;
 import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.GracefulShutdownHandler;
 import io.undertow.util.AttachmentKey;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import static io.undertow.security.api.AuthenticationMode.PRO_ACTIVE;
+import static io.undertow.server.handlers.ExceptionHandler.THROWABLE;
+import static io.undertow.util.StatusCodes.INTERNAL_SERVER_ERROR;
 import static java.util.Arrays.asList;
 
+@Slf4j
 @UtilityClass
 public final class HandlerFactory {
 
@@ -52,5 +57,26 @@ public final class HandlerFactory {
         handler = new AuthenticationMechanismsHandler(handler, asList(mechanisms));
         handler = new SecurityInitialHandler(PRO_ACTIVE, identityManager, handler);
         return handler;
+    }
+
+    public HttpHandler jsonExceptionHandler(HttpHandler toWrap) {
+        return Handlers.exceptionHandler(toWrap)
+                .addExceptionHandler(HttpException.class, HandlerFactory::handleHttpException)
+                .addExceptionHandler(Throwable.class, HandlerFactory::handleInternalException);
+    }
+
+    private void handleInternalException(HttpServerExchange exchange) {
+        Throwable throwable = exchange.getAttachment(THROWABLE);
+        log.error("Exception handler caught an error", throwable);
+        Responders.sendError(exchange, INTERNAL_SERVER_ERROR, throwable);
+    }
+
+    private void handleHttpException(HttpServerExchange exchange) {
+        Throwable throwable = exchange.getAttachment(THROWABLE);
+        if (throwable instanceof HttpException) {
+            Responders.sendError(exchange, ((HttpException) throwable).getStatus(), throwable);
+        } else {
+            handleInternalException(exchange);
+        }
     }
 }
