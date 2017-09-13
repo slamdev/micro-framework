@@ -2,14 +2,36 @@
 <!DOCTYPE configuration>
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <layout class="ch.qos.logback.contrib.json.access.JsonLayout"/>
-            <!-- Parameters description: ch.qos.logback.access.PatternLayout -->
-            <pattern>
-                %t{yyyy-MM-dd HH:mm:ss.SSS}  %green(ACCS) [%15.15I] %boldCyan(%m) %cyan(%U%q) : %s "%D ms" %u %h "%i{Referer}" "%i{User-Agent}"
-            </pattern>
-            <charset>utf8</charset>
-        </encoder>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <expression>
+                    return event.getRequestURI().startsWith("/assets/")
+                    || event.getRequestURI().equals("/")
+                    || event.getRequestURI().startsWith("/health")
+                    || event.getRequestURI().equals("/favicon.ico");
+                </expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <if condition='property("slf4jJsonLayout") == "true"'>
+            <then>
+                <encoder class="net.logstash.logback.encoder.LogstashAccessEncoder">
+                    <fieldNames>
+                        <fieldsRequestHeaders>@fields.request_headers</fieldsRequestHeaders>
+                        <fieldsResponseHeaders>@fields.response_headers</fieldsResponseHeaders>
+                    </fieldNames>
+                    <lowerCaseHeaderNames>true</lowerCaseHeaderNames>
+                </encoder>
+            </then>
+            <else>
+                <encoder class="ch.qos.logback.access.PatternLayoutEncoder">
+                    <!-- Parameters description: ch.qos.logback.access.PatternLayout -->
+                    <pattern>%t{yyyy-MM-dd HH:mm:ss.SSS}  %green(ACCS) [%15.15I] %boldCyan(%m) %cyan(%U%q) : %s "%D ms" %u %h "%i{Referer}" "%i{User-Agent}"</pattern>
+                    <charset>utf8</charset>
+                </encoder>
+            </else>
+        </if>
     </appender>
     <appender-ref ref="CONSOLE"/>
 </configuration>

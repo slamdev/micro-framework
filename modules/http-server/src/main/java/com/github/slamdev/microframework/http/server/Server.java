@@ -5,15 +5,11 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.github.slamdev.microframework.http.server.HandlerFactory.*;
 import static java.util.Optional.ofNullable;
 
 public class Server {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     private final Config appConfig;
 
@@ -25,7 +21,6 @@ public class Server {
 
     public void start(HttpHandler baseHandler) {
         Config config = appConfig.withFallback(ConfigFactory.load("reference.properties"));
-        LOGGER.info("{}", config);
         HttpHandler handler = configHandler(
                 loggingHandler(
                         healthHandler(

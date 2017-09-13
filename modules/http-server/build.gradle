@@ -17,5 +17,7 @@ dependencies {
     api 'com.google.guava:guava'
     implementation 'ch.qos.logback:logback-classic'
     implementation 'ch.qos.logback:logback-access'
+    implementation 'net.logstash.logback:logstash-logback-encoder'
+    implementation 'org.codehaus.janino:janino'
     compileOnly 'org.projectlombok:lombok'
 }
